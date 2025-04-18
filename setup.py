@@ -24,7 +24,7 @@ setup(
     long_description_content_type="text/markdown",
     author="anirudhsengar",
     author_email="anirudhsengar3@gmail.com",
-    url="https://github.com/anirudhsengar/HybridPredictor",
+    url="https://github.com/anirudhsengar/HybridPrototype",
 
     # Package configuration
     packages=find_packages(),
