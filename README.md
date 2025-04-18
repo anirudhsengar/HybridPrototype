@@ -1,65 +1,145 @@
-# GlitchWitcher: Hybrid Bug Prediction
 
-![Status: Under Development](https://img.shields.io/badge/Status-Under%20Development-yellow)
-![License](https://img.shields.io/badge/License-Eclipse%20Public%202.0-blue)
+# Hybrid Bug Predictor
 
-A hybrid approach to software defect prediction combining temporal patterns (BugCache/FixCache) with code metrics analysis (REPD) for improved bug prediction accuracy.
+A hybrid approach to software defect prediction combining temporal patterns (FixCache/BugCache) with code metrics analysis (REPD) for improved bug prediction accuracy.
 
-## 🚧 Project Status
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-EPL--2.0-blue.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
-This project is currently **under active development** as part of a Google Summer of Code (GSoC) 2025 project with the Eclipse Foundation. The implementation is in its early stages and not yet ready for production use.
+## Overview
 
-## 📖 Overview
+This project implements a novel hybrid approach to software defect prediction by combining two complementary techniques:
 
-GlitchWitcher combines two complementary approaches to bug prediction:
-
-1. **BugCache/FixCache Algorithm**: Analyzes version control history to identify temporal patterns in bug fixes
+1. **FixCache Algorithm**: Analyzes version control history to identify temporal patterns in bug fixes
 2. **Reconstruction Error Probability Distribution (REPD)**: Uses code metrics and autoencoders to detect anomalous code structures
 
 The hybrid approach dynamically weights both models based on repository characteristics, providing more accurate predictions than either method alone.
 
-## 🔍 Planned Features
+## Installation
 
-- Unified repository analysis for Git repositories
-- Multiple cache policies for temporal prediction
-- Code metrics extraction with language-specific support
-- Dynamic weight adjustment based on repository characteristics
-- GitHub integration for pull request analysis
-- Visual reporting of prediction results
+### Prerequisites
 
-## 🛠️ Development Roadmap
+- Python 3.8 or higher
+- Git (for repository analysis)
 
-- [x] Initial repository setup
-- [ ] Core interfaces and data structures
-- [ ] Port FixCache implementation from prototype
-- [ ] Port REPD implementation from prototype
-- [ ] Develop hybrid weighting mechanism
-- [ ] Evaluation framework
-- [ ] GitHub Actions integration
+### Basic Installation
 
-## 💻 Installation
+```bash
+# Clone the repository
+git clone https://github.com/anirudhsengar/hybrid-bug-predictor.git
+cd hybrid-bug-predictor
 
-*Coming soon! The project is not yet ready for installation.*
+# Install the package
+pip install .
+```
 
-## 📊 Usage
+### Installation with Optional Dependencies
 
-*Documentation will be provided as the project develops.*
+```bash
+# Install with visualization capabilities
+pip install .[visualization]
 
-## 🔗 Related Projects
+# Install with development tools
+pip install .[dev]
 
-This project builds on two separate prototypes:
+# Install all dependencies
+pip install .[full]
+```
 
-- [FixCachePrototype](https://github.com/anirudhsengar/FixCachePrototype): Implementation of the BugCache/FixCache approach
-- [REPDPrototype](https://github.com/anirudhsengar/REPDPrototype): Implementation of the REPD model
+## Usage
 
-## 📄 License
+### Basic Usage
 
-Eclipse Public License 2.0
+```python
+from HybridPrototype.hybrid.predictor import HybridPredictor
 
-## 👤 Author
+# Initialize the predictor with a repository path
+predictor = HybridPredictor(repo_path="/path/to/git/repository")
 
-Anirudh Sengar (Google Summer of Code 2025)
+# Analyze the repository
+predictor.analyze_repository()
 
-## 🙏 Acknowledgments
+# Get top risky files
+top_files = predictor.get_top_risky_files(limit=10)
 
-This project is developed as part of the Google Summer of Code 2025 program with the Eclipse Foundation.
+# Print results
+for i, (file_path, score) in enumerate(top_files, 1):
+    print(f"{i}. {file_path}: {score:.4f}")
+```
+
+### Command Line Interface
+
+```bash
+# Analyze a repository
+bugpredictor analyze /path/to/git/repository --cache-size 0.1 --top 20
+
+# Visualize results
+bugpredictor visualize /path/to/git/repository --output-dir ./results
+```
+
+## How It Works
+
+### The Hybrid Approach
+
+1. **Repository Analysis**: The unified repository analyzer extracts commit history, identifies bug fixes, and collects file metrics.
+
+2. **FixCache Prediction**: Implements the BugCache/FixCache algorithm to identify files likely to contain defects based on temporal and spatial locality.
+
+3. **REPD Analysis**: Uses code metrics and autoencoder reconstruction error to identify anomalous code structures likely to contain defects.
+
+4. **Dynamic Weighting**: Calculates optimal weights for each prediction approach based on repository characteristics.
+
+5. **Combined Prediction**: Merges predictions from both approaches using the calculated weights to produce a final risk score for each file.
+
+## Project Structure
+
+```
+HybridPrototype/
+├── __init__.py
+├── repository.py    
+├── fixcache/        
+├── repd/           
+├── hybrid/         
+│   ├── __init__.py
+│   ├── predictor.py  <-- This contains the HybridPredictor class
+│   └── weighting.py
+└── visualization.py
+└── setup.py
+```
+
+## Dependencies
+
+- **Core Dependencies**:
+  - `gitpython`: Git repository interaction
+  - `numpy` & `pandas`: Data processing
+  - `scikit-learn`: Machine learning components
+
+- **Optional Dependencies**:
+  - `matplotlib` & `seaborn`: Visualization
+  - `pytest`: Testing framework
+
+## Research Background
+
+This implementation is based on research in software defect prediction:
+
+- FixCache/BugCache approach from "Using History to Improve Mobile Application Security" (Kim et al.)
+- REPD approach from "Bug Prediction Through Reconstruction Error in Neural Networks" (Various authors)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the Eclipse Public License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+This project was developed as part of the Google Summer of Code 2025 program with the Eclipse Foundation. It adapts and combines approaches from the following prototypes:
+
+- [FixCachePrototype](https://github.com/anirudhsengar/FixCachePrototype)
+- [REPDPrototype](https://github.com/anirudhsengar/REPDPrototype)
+
+## Author
+
+- **Anirudh Sengar** - [GitHub Profile](https://github.com/anirudhsengar)
